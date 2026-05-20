@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PI_BIN="${PI_BIN:-pi}"
+PI_PROVIDER="${PI_PROVIDER:-openai-codex}"
+PI_MODEL="${PI_MODEL:-gpt-5.4-mini}"
+PI_THINKING="${PI_THINKING:-off}"
+PING_PROMPT="${PING_PROMPT:-Reply with exactly: pong}"
+PING_SYSTEM_PROMPT="${PING_SYSTEM_PROMPT:-x}"
+PING_STATE_DIR="${PING_STATE_DIR:-$HOME/.local/state/pi-codex-session-ping}"
+PING_HISTORY_FILE="${PING_HISTORY_FILE:-$PING_STATE_DIR/history.tsv}"
+
+mkdir -p "$PING_STATE_DIR"
+
+"$PI_BIN" \
+  --print \
+  --mode json \
+  --no-session \
+  --no-tools \
+  --no-extensions \
+  --no-skills \
+  --no-prompt-templates \
+  --no-themes \
+  --no-context-files \
+  --offline \
+  --provider "$PI_PROVIDER" \
+  --model "$PI_MODEL" \
+  --thinking "$PI_THINKING" \
+  --system-prompt "$PING_SYSTEM_PROMPT" \
+  "$PING_PROMPT" \
+  | node -e '
+const fs = require("fs");
+const logFile = process.argv[1];
+let input = "";
+
+process.stdin.setEncoding("utf8");
+process.stdin.on("data", (chunk) => {
+  input += chunk;
+});
+
+process.stdin.on("end", () => {
+  let finalText = "";
+  let usage = null;
+
+  for (const line of input.split(/\n/)) {
+    if (!line.trim()) continue;
+    let event;
+    try {
+      event = JSON.parse(line);
+    } catch {
+      console.error(line);
+      continue;
+    }
+
+    if (event.type === "turn_end") {
+      usage = event.usage || event.message?.usage || null;
+      const content = event.content || event.message?.content || [];
+      const textPart = content.find((part) => part.type === "text");
+      if (textPart?.text) finalText = textPart.text;
+    }
+  }
+
+  if (finalText) console.log(finalText);
+
+  if (usage) {
+    const cost = usage.cost?.total ?? 0;
+    console.log([
+      "usage",
+      `input=${usage.input ?? 0}`,
+      `output=${usage.output ?? 0}`,
+      `cache_read=${usage.cacheRead ?? 0}`,
+      `cache_write=${usage.cacheWrite ?? 0}`,
+      `total=${usage.totalTokens ?? 0}`,
+      `cost_usd=${cost}`,
+    ].join(" "));
+
+    const row = [
+      new Date().toISOString(),
+      usage.input ?? 0,
+      usage.output ?? 0,
+      usage.cacheRead ?? 0,
+      usage.cacheWrite ?? 0,
+      usage.totalTokens ?? 0,
+      cost,
+    ].join("\t") + "\n";
+
+    if (!fs.existsSync(logFile)) {
+      fs.writeFileSync(
+        logFile,
+        "timestamp\tinput_tokens\toutput_tokens\tcache_read_tokens\tcache_write_tokens\ttotal_tokens\tcost_usd\n",
+      );
+    }
+    fs.appendFileSync(logFile, row);
+  }
+});
+' "$PING_HISTORY_FILE"
+

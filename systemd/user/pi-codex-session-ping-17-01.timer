@@ -1,0 +1,13 @@
+[Unit]
+Description=Pi Codex session cadence ping at 17:01
+
+[Timer]
+OnCalendar=*-*-* 17:01:00
+Persistent=true
+RandomizedDelaySec=0
+AccuracySec=1min
+Unit=pi-codex-session-ping.service
+
+[Install]
+WantedBy=timers.target
+
