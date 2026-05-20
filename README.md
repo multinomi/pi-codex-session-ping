@@ -20,6 +20,28 @@ Codex Desktop automations are convenient, but even a prompt like `ping` can load
 
 In one local test, the optimized Pi command used about 40 input tokens instead of about 390. Exact usage depends on provider, model, Pi version, and platform.
 
+## Example Token Costs
+
+These numbers are from one Linux desktop setup using `gpt-5.4-mini` and a one-word `pong` response. Treat them as a practical sanity check, not a benchmark.
+
+| Path | What ran | Observed usage |
+| --- | --- | ---: |
+| Codex Desktop automation | A scheduled Codex automation with `prompt = "ping"`, `reasoning_effort = "none"` | Not directly logged in the same format, but it invokes the Codex automation runner and loads the Codex agent context. |
+| Codex CLI | `codex exec --ephemeral --ignore-user-config --ignore-rules --skip-git-repo-check ... 'Reply with exactly: pong'` | `23,870` tokens |
+| Pi, default fallback prompt | Pi with tools/skills/context disabled, but `--system-prompt ''` | about `393-402` total tokens |
+| Pi, minimal custom prompt | Pi with tools/skills/context disabled and `--system-prompt 'x'` | about `42-51` total tokens |
+
+The important discovery was that `--system-prompt ''` is not the same as "no prompt" in Pi. It can fall back to Pi's default coding-agent prompt, which adds a few hundred tokens. Passing a tiny non-empty system prompt, such as `x`, forces the custom-prompt path and avoids that default harness text.
+
+The local optimized systemd run logged:
+
+```text
+pong
+usage input=37 output=5 cache_read=0 cache_write=0 total=42 cost_usd=0.00005025
+```
+
+The goal is not to make the request free. The goal is to make the scheduled cadence ping pay only for the smallest useful model call instead of loading a full coding-agent context.
+
 ## Requirements
 
 - [Pi Coding Agent](https://pi.dev)
@@ -185,4 +207,3 @@ Wrapper and logs:
 rm -f ~/.local/bin/pi-codex-session-ping
 rm -rf ~/.local/state/pi-codex-session-ping
 ```
-
