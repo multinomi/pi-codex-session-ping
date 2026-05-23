@@ -22,12 +22,12 @@ In one local test, the optimized Pi command used about 40 input tokens instead o
 
 ## Example Token Costs
 
-These numbers are from one Linux desktop setup using `gpt-5.4-mini` and a tiny ping/pong-style response. Treat them as a practical sanity check, not a benchmark.
+These numbers are from one Linux desktop setup using `gpt-5.4-mini` and the prompt `ping`. Treat them as a practical sanity check, not a benchmark.
 
 | Path | What ran | Observed usage |
 | --- | --- | ---: |
 | Codex Desktop automation | A scheduled Codex automation with `prompt = "ping"`, `reasoning_effort = "none"` | Not directly logged in the same format, but it invokes the Codex automation runner and loads the Codex agent context. |
-| Codex CLI | `codex exec --ephemeral --ignore-user-config --ignore-rules --skip-git-repo-check ... 'Reply with exactly: pong'` | `23,870` tokens |
+| Codex CLI | `codex exec --ephemeral --ignore-user-config --ignore-rules --skip-git-repo-check ... 'ping'` | roughly `23,870` tokens in the original local check |
 | Pi, default fallback prompt | Pi with tools/skills/context disabled, but `--system-prompt ''` | about `393-402` total tokens |
 | Pi, minimal custom prompt | Pi with tools/skills/context disabled and `--system-prompt 'x'` | about `42-51` total tokens |
 
