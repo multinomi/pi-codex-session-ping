@@ -37,7 +37,7 @@ The local optimized systemd run logged:
 
 ```text
 pong
-usage input=37 output=5 cache_read=0 cache_write=0 total=42 cost_usd=0.00005025
+usage provider=openai-codex model=gpt-5.4-mini api=openai-codex-responses input=37 output=5 cache_read=0 cache_write=0 total=42 cost_usd=0.00005025
 ```
 
 The goal is not to make the request free. The goal is to make the scheduled cadence ping pay only for the smallest useful model call instead of loading a full coding-agent context.
@@ -102,7 +102,13 @@ Expected output:
 
 ```text
 pong
-usage input=37 output=5 cache_read=0 cache_write=0 total=42 cost_usd=0.00005025
+usage provider=openai-codex model=gpt-5.4-mini api=openai-codex-responses input=37 output=5 cache_read=0 cache_write=0 total=42 cost_usd=0.00005025
+```
+
+The history file records the actual provider/model/API reported by Pi on the final response, not just the configured defaults:
+
+```text
+timestamp provider model api input_tokens output_tokens cache_read_tokens cache_write_tokens total_tokens cost_usd
 ```
 
 ## How It Works
@@ -130,7 +136,7 @@ pi \
 
 The tiny non-empty system prompt is intentional. In Pi, an empty system prompt can fall back to the default coding-agent system prompt. A tiny non-empty prompt forces the custom-prompt path and keeps the request small.
 
-Pi emits JSON events in `--mode json`; the wrapper parses the final `turn_end` event and appends usage to `~/.local/state/pi-codex-session-ping/history.tsv`.
+Pi emits JSON events in `--mode json`; the wrapper parses the final `turn_end` event and appends the actual provider, model, API, and usage to `~/.local/state/pi-codex-session-ping/history.tsv`.
 
 ## Platform Notes
 

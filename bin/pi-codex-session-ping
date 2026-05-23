@@ -41,6 +41,9 @@ process.stdin.on("data", (chunk) => {
 process.stdin.on("end", () => {
   let finalText = "";
   let usage = null;
+  let provider = "";
+  let model = "";
+  let api = "";
 
   for (const line of input.split(/\n/)) {
     if (!line.trim()) continue;
@@ -54,6 +57,9 @@ process.stdin.on("end", () => {
 
     if (event.type === "turn_end") {
       usage = event.usage || event.message?.usage || null;
+      provider = event.message?.provider || event.provider || "";
+      model = event.message?.model || event.model || "";
+      api = event.message?.api || event.api || "";
       const content = event.content || event.message?.content || [];
       const textPart = content.find((part) => part.type === "text");
       if (textPart?.text) finalText = textPart.text;
@@ -66,6 +72,9 @@ process.stdin.on("end", () => {
     const cost = usage.cost?.total ?? 0;
     console.log([
       "usage",
+      `provider=${provider || "unknown"}`,
+      `model=${model || "unknown"}`,
+      `api=${api || "unknown"}`,
       `input=${usage.input ?? 0}`,
       `output=${usage.output ?? 0}`,
       `cache_read=${usage.cacheRead ?? 0}`,
@@ -76,6 +85,9 @@ process.stdin.on("end", () => {
 
     const row = [
       new Date().toISOString(),
+      provider,
+      model,
+      api,
       usage.input ?? 0,
       usage.output ?? 0,
       usage.cacheRead ?? 0,
@@ -87,11 +99,10 @@ process.stdin.on("end", () => {
     if (!fs.existsSync(logFile)) {
       fs.writeFileSync(
         logFile,
-        "timestamp\tinput_tokens\toutput_tokens\tcache_read_tokens\tcache_write_tokens\ttotal_tokens\tcost_usd\n",
+        "timestamp\tprovider\tmodel\tapi\tinput_tokens\toutput_tokens\tcache_read_tokens\tcache_write_tokens\ttotal_tokens\tcost_usd\n",
       );
     }
     fs.appendFileSync(logFile, row);
   }
 });
 ' "$PING_HISTORY_FILE"
-

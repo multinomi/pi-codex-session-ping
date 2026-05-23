@@ -41,8 +41,10 @@ Expected output:
 
 ```text
 pong
-usage input=... output=... total=... cost_usd=...
+usage provider=... model=... api=... input=... output=... total=... cost_usd=...
 ```
+
+Check that `provider` and `model` match the intended values. The wrapper logs the actual values Pi reports in the final response, so this catches provider/model fallback.
 
 ## Linux
 
@@ -104,4 +106,3 @@ launchctl list | grep pi-codex-session-ping
 tail -n 50 ~/Library/Logs/pi-codex-session-ping.log
 tail -n 20 ~/.local/state/pi-codex-session-ping/history.tsv
 ```
-
