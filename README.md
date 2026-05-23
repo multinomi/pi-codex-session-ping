@@ -29,9 +29,9 @@ These numbers are from one Linux desktop setup using `gpt-5.4-mini` and the prom
 | Codex Desktop automation | A scheduled Codex automation with `prompt = "ping"`, `reasoning_effort = "none"` | Not directly logged in the same format, but it invokes the Codex automation runner and loads the Codex agent context. |
 | Codex CLI | `codex exec --ephemeral --ignore-user-config --ignore-rules --skip-git-repo-check ... 'ping'` | roughly `23,870` tokens in the original local check |
 | Pi, default fallback prompt | Pi with tools/skills/context disabled, but `--system-prompt ''` | about `393-402` total tokens |
-| Pi, minimal custom prompt | Pi with tools/skills/context disabled and `--system-prompt 'x'` | about `42-51` total tokens |
+| Pi, minimal custom prompt | Pi with tools/skills/context disabled and `--system-prompt 'test'` | about `42-51` total tokens |
 
-The important discovery was that `--system-prompt ''` is not the same as "no prompt" in Pi. It can fall back to Pi's default coding-agent prompt, which adds a few hundred tokens. Passing a tiny non-empty system prompt, such as `x`, forces the custom-prompt path and avoids that default harness text.
+The important discovery was that `--system-prompt ''` is not the same as "no prompt" in Pi. It can fall back to Pi's default coding-agent prompt, which adds a few hundred tokens. Passing a tiny non-empty system prompt, such as `test`, forces the custom-prompt path and avoids that default harness text.
 
 The local optimized systemd run logged:
 
@@ -130,7 +130,7 @@ pi \
   --provider "$PI_PROVIDER" \
   --model "$PI_MODEL" \
   --thinking off \
-  --system-prompt 'x' \
+  --system-prompt 'test' \
   'ping'
 ```
 
