@@ -22,7 +22,7 @@ In one local test, the optimized Pi command used about 40 input tokens instead o
 
 ## Example Token Costs
 
-These numbers are from one Linux desktop setup using `gpt-5.4-mini` and a one-word `pong` response. Treat them as a practical sanity check, not a benchmark.
+These numbers are from one Linux desktop setup using `gpt-5.4-mini` and a tiny ping/pong-style response. Treat them as a practical sanity check, not a benchmark.
 
 | Path | What ran | Observed usage |
 | --- | --- | ---: |
@@ -131,7 +131,7 @@ pi \
   --model "$PI_MODEL" \
   --thinking off \
   --system-prompt 'x' \
-  'Reply with exactly: pong'
+  'ping'
 ```
 
 The tiny non-empty system prompt is intentional. In Pi, an empty system prompt can fall back to the default coding-agent system prompt. A tiny non-empty prompt forces the custom-prompt path and keeps the request small.
