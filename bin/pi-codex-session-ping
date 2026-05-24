@@ -70,6 +70,12 @@ process.stdin.on("end", () => {
 
   if (usage) {
     const cost = usage.cost?.total ?? 0;
+    const now = new Date();
+    const pad = (value) => String(value).padStart(2, "0");
+    const localTime = [
+      `${pad(now.getMonth() + 1)}-${pad(now.getDate())}`,
+      `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`,
+    ].join(" ");
     console.log([
       "usage",
       `provider=${provider || "unknown"}`,
@@ -84,7 +90,8 @@ process.stdin.on("end", () => {
     ].join(" "));
 
     const row = [
-      new Date().toISOString(),
+      now.toISOString(),
+      localTime,
       provider,
       model,
       api,
@@ -99,7 +106,7 @@ process.stdin.on("end", () => {
     if (!fs.existsSync(logFile)) {
       fs.writeFileSync(
         logFile,
-        "timestamp\tprovider\tmodel\tapi\tinput_tokens\toutput_tokens\tcache_read_tokens\tcache_write_tokens\ttotal_tokens\tcost_usd\n",
+        "timestamp\tlocal_time\tprovider\tmodel\tapi\tinput_tokens\toutput_tokens\tcache_read_tokens\tcache_write_tokens\ttotal_tokens\tcost_usd\n",
       );
     }
     fs.appendFileSync(logFile, row);

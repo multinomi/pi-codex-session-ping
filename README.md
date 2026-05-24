@@ -108,7 +108,7 @@ usage provider=openai-codex model=gpt-5.4-mini api=openai-codex-responses input=
 The history file records the actual provider/model/API reported by Pi on the final response, not just the configured defaults:
 
 ```text
-timestamp provider model api input_tokens output_tokens cache_read_tokens cache_write_tokens total_tokens cost_usd
+timestamp local_time provider model api input_tokens output_tokens cache_read_tokens cache_write_tokens total_tokens cost_usd
 ```
 
 ## How It Works
