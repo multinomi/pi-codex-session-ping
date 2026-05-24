@@ -20,6 +20,15 @@ Codex Desktop automations are convenient, but even a prompt like `ping` can load
 
 In one local test, the optimized Pi command used about 40 input tokens instead of about 390. Exact usage depends on provider, model, Pi version, and platform.
 
+## Commands
+
+After installation, two user-facing commands are available:
+
+| Command | Use |
+| --- | --- |
+| `pi-ping-now` | Run one manual on-demand ping and append usage to the TSV history. |
+| `pi-codex-session-ping` | Lower-level command used by the scheduler; also safe to run manually. |
+
 ## Example Token Costs
 
 These numbers are from one Linux desktop setup using `gpt-5.4-mini` and the prompt `ping`. Treat them as a practical sanity check, not a benchmark.
