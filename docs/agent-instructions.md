@@ -99,6 +99,12 @@ journalctl --user -u pi-codex-session-ping.service -n 50 --no-pager
 tail -n 20 ~/.local/state/pi-codex-session-ping/history.tsv
 ```
 
+If the local history file contains old-format rows, reset it to the current header before testing:
+
+```bash
+printf 'timestamp\tlocal_time\tprovider\tmodel\tapi\tinput_tokens\toutput_tokens\tcache_read_tokens\tcache_write_tokens\ttotal_tokens\tcost_usd\n' > ~/.local/state/pi-codex-session-ping/history.tsv
+```
+
 macOS:
 
 ```bash
