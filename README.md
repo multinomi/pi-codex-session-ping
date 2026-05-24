@@ -62,6 +62,14 @@ cd pi-codex-session-ping
 ./scripts/install.sh
 ```
 
+Run a manual ping on demand:
+
+```bash
+pi-ping-now
+```
+
+That command is a small wrapper around `pi-codex-session-ping`, so it writes the same journal output and appends to the same token history file.
+
 The default schedule mirrors a roughly 5-hour cadence:
 
 - `06:59`
@@ -217,5 +225,6 @@ Wrapper and logs:
 
 ```bash
 rm -f ~/.local/bin/pi-codex-session-ping
+rm -f ~/.local/bin/pi-ping-now
 rm -rf ~/.local/state/pi-codex-session-ping
 ```

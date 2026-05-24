@@ -12,6 +12,7 @@ times_csv="${PING_TIMES:-06:59,12:00,17:01,22:02}"
 
 mkdir -p "$install_bin" "$systemd_user_dir"
 install -m 0755 "$repo_root/bin/pi-codex-session-ping" "$install_bin/pi-codex-session-ping"
+install -m 0755 "$repo_root/bin/pi-ping-now" "$install_bin/pi-ping-now"
 
 cat > "$systemd_user_dir/pi-codex-session-ping.service" <<SERVICE
 [Unit]
@@ -56,6 +57,6 @@ systemctl --user daemon-reload
 systemctl --user enable --now "${timer_units[@]}"
 
 printf 'Installed %s\n' "$install_bin/pi-codex-session-ping"
+printf 'Installed %s\n' "$install_bin/pi-ping-now"
 printf 'Enabled timers: %s\n' "${timer_units[*]}"
 systemctl --user list-timers 'pi-codex-session-ping*' --all --no-pager
-
