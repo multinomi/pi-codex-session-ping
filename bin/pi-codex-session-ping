@@ -3,7 +3,7 @@ set -euo pipefail
 
 PI_BIN="${PI_BIN:-pi}"
 PI_PROVIDER="${PI_PROVIDER:-openai-codex}"
-PI_MODEL="${PI_MODEL:-gpt-5.4-mini}"
+PI_MODEL="${PI_MODEL:-gpt-5.5}"
 PI_THINKING="${PI_THINKING:-off}"
 PING_PROMPT="${PING_PROMPT:-ping}"
 PING_SYSTEM_PROMPT="${PING_SYSTEM_PROMPT:-test}"

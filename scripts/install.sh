@@ -6,7 +6,7 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 install_bin="${INSTALL_BIN:-$HOME/.local/bin}"
 systemd_user_dir="${SYSTEMD_USER_DIR:-$HOME/.config/systemd/user}"
 provider="${PI_PROVIDER:-openai-codex}"
-model="${PI_MODEL:-gpt-5.4-mini}"
+model="${PI_MODEL:-gpt-5.5}"
 thinking="${PI_THINKING:-off}"
 times_csv="${PING_TIMES:-06:59,12:00,17:01,22:02}"
 

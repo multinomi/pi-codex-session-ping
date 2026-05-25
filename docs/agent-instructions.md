@@ -28,13 +28,13 @@ Check Pi:
 ```bash
 command -v pi
 pi --version
-pi --list-models gpt-5.4-mini
+pi --list-models gpt-5.5
 ```
 
 Check the minimal command before scheduling:
 
 ```bash
-PI_PROVIDER=openai-codex PI_MODEL=gpt-5.4-mini ./bin/pi-codex-session-ping
+PI_PROVIDER=openai-codex PI_MODEL=gpt-5.5 ./bin/pi-codex-session-ping
 ```
 
 Expected output:
