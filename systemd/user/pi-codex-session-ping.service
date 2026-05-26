@@ -5,7 +5,7 @@ Documentation=https://pi.dev
 [Service]
 Type=oneshot
 Environment=PI_PROVIDER=openai-codex
-Environment=PI_MODEL=gpt-5.5
+Environment=PI_MODEL=gpt-5.4-mini
 Environment=PI_THINKING=off
 ExecStart=%h/.local/bin/pi-codex-session-ping
 WorkingDirectory=%h

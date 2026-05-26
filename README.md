@@ -31,14 +31,14 @@ After installation, two user-facing commands are available:
 
 ## Example Token Costs
 
-These numbers are from one Linux desktop setup using `gpt-5.5` and the prompt `ping`. Treat them as a practical sanity check, not a benchmark.
+These numbers are from one Linux desktop setup using `gpt-5.4-mini` and the prompt `ping`. Treat them as a practical sanity check, not a benchmark.
 
 | Path | What ran | Observed usage |
 | --- | --- | ---: |
 | Codex Desktop automation | A scheduled Codex automation with `prompt = "ping"`, `reasoning_effort = "none"` | Not directly logged in the same format, but it invokes the Codex automation runner and loads the Codex agent context. |
 | Codex CLI | `codex exec --ephemeral --ignore-user-config --ignore-rules --skip-git-repo-check ... 'ping'` | roughly `23,870` tokens in the original local check |
 | Pi, default fallback prompt | Pi with tools/skills/context disabled, but `--system-prompt ''` | about `393-402` total tokens |
-| Pi, minimal custom prompt | Pi with tools/skills/context disabled and `--system-prompt 'test'` | about `53` total tokens in the current `gpt-5.5` setup |
+| Pi, minimal custom prompt | Pi with tools/skills/context disabled and `--system-prompt 'test'` | about `41` total tokens in the current `gpt-5.4-mini` setup |
 
 The important discovery was that `--system-prompt ''` is not the same as "no prompt" in Pi. It can fall back to Pi's default coding-agent prompt, which adds a few hundred tokens. Passing a tiny non-empty system prompt, such as `test`, forces the custom-prompt path and avoids that default harness text.
 
@@ -46,7 +46,7 @@ The local optimized systemd run logged:
 
 ```text
 pong
-usage provider=openai-codex model=gpt-5.5 api=openai-codex-responses input=36 output=17 cache_read=0 cache_write=0 total=53 cost_usd=0.0006900000000000001
+usage provider=openai-codex model=gpt-5.4-mini api=openai-codex-responses input=36 output=5 cache_read=0 cache_write=0 total=41 cost_usd=0.0000495
 ```
 
 The goal is not to make the request free. The goal is to make the scheduled cadence ping pay only for the smallest useful model call instead of loading a full coding-agent context.
@@ -54,7 +54,7 @@ The goal is not to make the request free. The goal is to make the scheduled cade
 ## Requirements
 
 - [Pi Coding Agent](https://pi.dev)
-- A Pi-authenticated provider/model, for example `openai-codex` with `gpt-5.5`
+- A Pi-authenticated provider/model, for example `openai-codex` with `gpt-5.4-mini`
 - Node.js available on `PATH`
 - One scheduler:
   - Linux: systemd user timers
@@ -89,14 +89,14 @@ The default schedule mirrors a roughly 5-hour cadence:
 The default command uses:
 
 ```bash
-pi --provider openai-codex --model gpt-5.5 --thinking off
+pi --provider openai-codex --model gpt-5.4-mini --thinking off
 ```
 
 Override at install time:
 
 ```bash
 PI_PROVIDER=openai \
-PI_MODEL=gpt-5.5 \
+PI_MODEL=gpt-5.4-mini \
 PING_TIMES=06:59,12:00,17:01,22:02 \
 ./scripts/install.sh
 ```
@@ -125,7 +125,7 @@ Expected output:
 
 ```text
 pong
-usage provider=openai-codex model=gpt-5.5 api=openai-codex-responses input=36 output=17 cache_read=0 cache_write=0 total=53 cost_usd=0.0006900000000000001
+usage provider=openai-codex model=gpt-5.4-mini api=openai-codex-responses input=36 output=5 cache_read=0 cache_write=0 total=41 cost_usd=0.0000495
 ```
 
 The history file records the actual provider/model/API reported by Pi on the final response, not just the configured defaults:
